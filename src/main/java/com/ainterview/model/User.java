@@ -1,9 +1,15 @@
 package com.ainterview.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,7 +18,9 @@ import java.time.LocalDateTime;
 @ToString(exclude = "password")
 @EqualsAndHashCode(of = "id")
 public class User {
-    private String id;
+    @Id
+    @GeneratedValue
+    private Long id;
     private String name;
     private String email;
     private String password;
