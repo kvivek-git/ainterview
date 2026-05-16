@@ -1,6 +1,7 @@
 package com.ainterview.service;
 
 import com.ainterview.dto.AuthResponse;
+import com.ainterview.dto.LoginRequest;
 import com.ainterview.dto.RegisterRequest;
 import com.ainterview.model.User;
 import com.ainterview.repository.UserRepository;
@@ -17,7 +18,7 @@ public class AuthService {
     private final JwtService jwtService;
 
     public AuthResponse register(RegisterRequest request){
-        if(userRepository.findByEmail(request.getEmail()) != null){
+        if(userRepository.findByEmail(request.getEmail()).isPresent()){
             throw new RuntimeException("Email Already Exists");
         }
 
@@ -31,5 +32,18 @@ public class AuthService {
         String token = jwtService.generateToken(user);
 
         return new AuthResponse(token, user.getEmail(), user.getRole().name());
+    }
+
+    public AuthResponse login(LoginRequest request){
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
+            throw new RuntimeException("Invalid Password");
+        }
+
+        String token = jwtService.generateToken(user);
+        return new AuthResponse(token, user.getEmail(), user.getRole().name());
+
     }
 }

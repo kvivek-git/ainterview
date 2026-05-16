@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public Optional<User> getUserByEmail(String email){
-        return Optional.ofNullable(userRepository.findByEmail(email));
+        return userRepository.findByEmail(email);
     }
 
     public Optional<User> getUserById(Long id){
@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public Optional<User> getUserByName(String name){
-        return Optional.ofNullable(userRepository.findByName(name));
+        return userRepository.findByName(name);
     }
 
     public List<User> getAllUsers() {
