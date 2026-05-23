@@ -19,8 +19,8 @@ public class InterviewSessionService {
     final private InterviewSessionRepository sessionRepository;
     final private UserRepository userRepository;
 
-    public InterviewSessionResponse startInterview(Long userId){
-        User user = userRepository.findById(userId)
+    public InterviewSessionResponse startInterview(String email){
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found. "));
 
         InterviewSession session = InterviewSession.builder()

@@ -26,7 +26,7 @@ public class AnswerSubmissionService {
                 .orElseThrow(() -> new RuntimeException("Question not found"));
 
         AnswerSubmission submission = AnswerSubmission.builder()
-                .session(session)
+                .interviewSession(session)
                 .question(question)
                 .language(ProgrammingLanguage.valueOf(request.getLanguage()))
                 .code(request.getCode())

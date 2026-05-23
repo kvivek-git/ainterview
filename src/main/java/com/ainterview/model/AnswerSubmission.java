@@ -19,7 +19,7 @@ public class AnswerSubmission {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "session_id", nullable = false)
-    private InterviewSession session;
+    private InterviewSession interviewSession;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
