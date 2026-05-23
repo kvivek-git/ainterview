@@ -15,8 +15,21 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     @Lob
     private String description;
+
+    private String difficulty;
+
+    private String topic;
+
+    private String company;
+
+    @Column(columnDefinition = "TEXT")
+    private String expectedApproach;
+
+    @Column(columnDefinition = "TEXT")
+    private String starterCode;
 }
