@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface InterviewSessionRepository extends JpaRepository<InterviewSession, Long> {
     List<InterviewSession> findByUserOrderByStartedAtDesc(User user);
+
+    boolean existsByUserAndStatusIn(User user, List<String> statuses);
 }
 

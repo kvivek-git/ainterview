@@ -2,10 +2,9 @@ package com.ainterview.service;
 
 import com.ainterview.dto.AnswerSubmissionResponse;
 import com.ainterview.dto.SubmitAnswerRequest;
-import com.ainterview.model.AnswerSubmission;
-import com.ainterview.model.InterviewSession;
-import com.ainterview.model.ProgrammingLanguage;
-import com.ainterview.model.Question;
+import com.ainterview.exception.InterviewSessionException;
+import com.ainterview.exception.ResourceNotFoundException;
+import com.ainterview.model.*;
 import com.ainterview.repository.AnswerSubmissionRepository;
 import com.ainterview.repository.InterviewSessionRepository;
 import com.ainterview.repository.QuestionRepository;
@@ -21,9 +20,12 @@ public class AnswerSubmissionService {
 
     public AnswerSubmissionResponse submitAnswer(SubmitAnswerRequest request){
         InterviewSession session = sessionRepository.findById(request.getSessionId())
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found", request.getSessionId()));
+        if(session.getStatus() != InterviewStatus.INPROGRESS){
+            throw new InterviewSessionException("InterviewSession is not active");
+        }
         Question question = questionRepository.findById(request.getQuestionId())
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found", request.getQuestionId()));
 
         AnswerSubmission submission = AnswerSubmission.builder()
                 .interviewSession(session)

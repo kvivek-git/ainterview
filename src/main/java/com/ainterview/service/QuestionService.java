@@ -1,6 +1,7 @@
 package com.ainterview.service;
 
 import com.ainterview.dto.QuestionDto;
+import com.ainterview.exception.ResourceNotFoundException;
 import com.ainterview.model.Question;
 import com.ainterview.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,9 @@ public class QuestionService {
     }
 
     public Question getQuestionById(Long id) {
-
         return questionRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Question not found"));
+                        new ResourceNotFoundException("Question", id));
     }
 
     public Question updateQuestion(Long id, QuestionDto dto) {

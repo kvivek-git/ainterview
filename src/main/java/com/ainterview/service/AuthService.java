@@ -3,6 +3,9 @@ package com.ainterview.service;
 import com.ainterview.dto.AuthResponse;
 import com.ainterview.dto.LoginRequest;
 import com.ainterview.dto.RegisterRequest;
+import com.ainterview.exception.DuplicateResourceException;
+import com.ainterview.exception.InvalidCredentialsException;
+import com.ainterview.exception.ResourceNotFoundException;
 import com.ainterview.model.User;
 import com.ainterview.repository.UserRepository;
 import com.ainterview.security.JwtService;
@@ -19,7 +22,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request){
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
-            throw new RuntimeException("Email Already Exists");
+            throw new DuplicateResourceException("Email Already Exists: " + request.getEmail());
         }
 
         User user = User.builder()
@@ -36,10 +39,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request){
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            throw new RuntimeException("Invalid Password");
+            throw new InvalidCredentialsException();
         }
 
         String token = jwtService.generateToken(user);

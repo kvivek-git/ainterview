@@ -1,6 +1,8 @@
 package com.ainterview.service;
 
 import com.ainterview.dto.InterviewSessionResponse;
+import com.ainterview.exception.InterviewSessionException;
+import com.ainterview.exception.ResourceNotFoundException;
 import com.ainterview.model.AnswerSubmission;
 import com.ainterview.model.InterviewSession;
 import com.ainterview.model.InterviewStatus;
@@ -23,6 +25,10 @@ public class InterviewSessionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found. "));
 
+        boolean hasActiveSession = sessionRepository.existsByUserAndStatusIn(user, List.of(InterviewStatus.CREATED.name(), InterviewStatus.INPROGRESS.name()));
+        if(hasActiveSession){
+            throw new RuntimeException("User already has an active interview session. ");
+        }
         InterviewSession session = InterviewSession.builder()
                 .user(user)
                 .status(InterviewStatus.INPROGRESS)
@@ -36,7 +42,11 @@ public class InterviewSessionService {
 
     public InterviewSessionResponse completeInterview(Long sessionId){
         InterviewSession session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("InterviewSession", sessionId));
+
+        if(session.getStatus() == InterviewStatus.COMPLETED){
+            throw new InterviewSessionException("Session" + sessionId + "is already completed");
+        }
 
         session.setStatus(InterviewStatus.COMPLETED);
         session.setEndedAt(new Date());

@@ -73,4 +73,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleGeneric(Exception ex, HttpServletRequest request) {
         return ErrorResponse.of(500, "Internal Server Error", "Something went wrong", request.getRequestURI());
     }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleInvalidCredentials(InvalidCredentialsException ex, HttpServletRequest request) {
+        return ErrorResponse.of(401, "Unauthorized", ex.getMessage(), request.getRequestURI());
+    }
 }
