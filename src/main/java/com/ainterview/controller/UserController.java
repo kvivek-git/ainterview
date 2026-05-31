@@ -1,8 +1,11 @@
 package com.ainterview.controller;
 
-import com.ainterview.model.User;
+import com.ainterview.dto.CreateUserRequest;
+import com.ainterview.dto.UserResponse;
 import com.ainterview.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,21 +18,23 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody User user){
-        return userService.createUser(user);
+    public UserResponse createUser(@RequestBody @Valid CreateUserRequest request){
+        return userService.createUser(request);
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getUser(@PathVariable Long id){
+    public UserResponse getUser(@PathVariable Long id){
         return userService.getUserById(id);
     }
 
     @GetMapping
-    public List<User> getAllUsers(){
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponse> getAllUsers(){
         return userService.getAllUsers();
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
     }
