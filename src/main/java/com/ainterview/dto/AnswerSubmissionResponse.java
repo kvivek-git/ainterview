@@ -14,4 +14,9 @@ public class AnswerSubmissionResponse {
     private Date submittedAt;
     private String language;
     private Integer score;
+    private String aiFeedback;
+    private String timeComplexity;
+    private String spaceComplexity;
+    private String strengths;
+    private String improvements;
 }

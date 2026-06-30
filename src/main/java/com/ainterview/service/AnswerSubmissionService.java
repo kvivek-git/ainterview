@@ -1,6 +1,7 @@
 package com.ainterview.service;
 
 import com.ainterview.dto.AnswerSubmissionResponse;
+import com.ainterview.dto.EvaluationResult;
 import com.ainterview.dto.SubmitAnswerRequest;
 import com.ainterview.exception.InterviewSessionException;
 import com.ainterview.exception.ResourceNotFoundException;
@@ -17,6 +18,7 @@ public class AnswerSubmissionService {
     final private InterviewSessionRepository sessionRepository;
     final private QuestionRepository questionRepository;
     final private AnswerSubmissionRepository submissionRepository;
+    final private AiEvaluationService aiEvaluationService;
 
     public AnswerSubmissionResponse submitAnswer(SubmitAnswerRequest request){
         InterviewSession session = sessionRepository.findById(request.getSessionId())
@@ -34,7 +36,16 @@ public class AnswerSubmissionService {
                 .code(request.getCode())
                 .score(80)
                 .build();
-        submission = submissionRepository.save(submission);
+        AnswerSubmission saved = submissionRepository.save(submission);
+
+        EvaluationResult result = aiEvaluationService.evaluate(saved);
+
+        saved.setScore(result.score());
+        saved.setAiFeedback(result.feedback());
+        saved.setTimeComplexity(result.timeComplexity());
+        saved.setSpaceComplexity(result.spaceComplexity());
+        saved.setStrengths(result.strengths());
+        saved.setImprovements(result.improvements());
 
         return AnswerSubmissionResponse.builder()
                 .id(submission.getId())

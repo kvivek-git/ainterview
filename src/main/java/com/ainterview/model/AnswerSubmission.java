@@ -36,6 +36,19 @@ public class AnswerSubmission {
 
     private Integer score;
 
+    @Column(columnDefinition = "TEXT")
+    private String aiFeedback;
+
+    private String timeComplexity;
+
+    private String spaceComplexity;
+
+    @Column(columnDefinition = "TEXT")
+    private String strengths;
+
+    @Column(columnDefinition = "TEXT")
+    private String improvements;
+
     @PrePersist
     public void prePersist(){
         if(submittedAt == null)
