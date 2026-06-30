@@ -47,13 +47,20 @@ public class AnswerSubmissionService {
         saved.setStrengths(result.strengths());
         saved.setImprovements(result.improvements());
 
+        submissionRepository.save(saved);
+
         return AnswerSubmissionResponse.builder()
-                .id(submission.getId())
+                .id(saved.getId())
                 .sessionId(session.getId())
                 .questionId(question.getId())
-                .language(submission.getLanguage().name())
-                .submittedAt(submission.getSubmittedAt())
-                .score(submission.getScore())
+                .language(saved.getLanguage().name())
+                .submittedAt(saved.getSubmittedAt())
+                .score(saved.getScore())
+                .aiFeedback(saved.getAiFeedback())
+                .timeComplexity(saved.getTimeComplexity())
+                .spaceComplexity(saved.getSpaceComplexity())
+                .strengths(saved.getStrengths())
+                .improvements(saved.getImprovements())
                 .build();
     }
 }

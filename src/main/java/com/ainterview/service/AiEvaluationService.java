@@ -4,6 +4,7 @@ import com.ainterview.dto.EvaluationResult;
 import com.ainterview.model.AnswerSubmission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
@@ -13,18 +14,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class AiEvaluationService {
-    Client client = new Client();
-
-    String modelName = "gemini-3.5-flash";
+    private final Client client;
     private final ObjectMapper objectMapper;
+
+    public AiEvaluationService(
+            @Value("${gemini.api.key}") String apiKey,
+            ObjectMapper objectMapper
+    ) {
+        this.objectMapper = objectMapper;
+        this.client = Client.builder().apiKey(apiKey).build();
+    }
 
     public EvaluationResult evaluate(AnswerSubmission answerSubmission){
         // Implementation for evaluating the answer submission
         String prompt = buildPrompt(answerSubmission);
         try{
+            String modelName = "gemini-3.5-flash";
             GenerateContentResponse response = client.models.generateContent(
                     modelName,
                     prompt,

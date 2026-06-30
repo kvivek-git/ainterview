@@ -25,7 +25,7 @@ public class InterviewSessionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found. "));
 
-        boolean hasActiveSession = sessionRepository.existsByUserAndStatusIn(user, List.of(InterviewStatus.CREATED.name(), InterviewStatus.INPROGRESS.name()));
+        boolean hasActiveSession = sessionRepository.existsByUserAndStatusIn(user, List.of(InterviewStatus.CREATED, InterviewStatus.INPROGRESS));
         if(hasActiveSession){
             throw new RuntimeException("User already has an active interview session. ");
         }
