@@ -11,6 +11,7 @@ import com.ainterview.repository.InterviewSessionRepository;
 import com.ainterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,7 @@ public class InterviewSessionService {
         return mapToResponse(session);
     }
 
+    @Transactional
     public InterviewSessionResponse completeInterview(Long sessionId){
         InterviewSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("InterviewSession", sessionId));
