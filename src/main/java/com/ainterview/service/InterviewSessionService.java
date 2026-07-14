@@ -24,11 +24,11 @@ public class InterviewSessionService {
 
     public InterviewSessionResponse startInterview(String email){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found. "));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
         boolean hasActiveSession = sessionRepository.existsByUserAndStatusIn(user, List.of(InterviewStatus.CREATED, InterviewStatus.INPROGRESS));
         if(hasActiveSession){
-            throw new RuntimeException("User already has an active interview session. ");
+            throw new InterviewSessionException("User already has an active interview session. ");
         }
         InterviewSession session = InterviewSession.builder()
                 .user(user)

@@ -34,7 +34,6 @@ public class AnswerSubmissionService {
                 .question(question)
                 .language(ProgrammingLanguage.valueOf(request.getLanguage()))
                 .code(request.getCode())
-                .score(80)
                 .build();
         AnswerSubmission saved = submissionRepository.save(submission);
 
